@@ -31,10 +31,12 @@ export default function Home() {
     const docs = await getDocs(snapshot)
     const inventoryList = []
     docs.forEach((doc)=>{
-      inventoryList.push({
-        name: doc.id,
-        ...doc.data(),
-      })
+      if(doc.uid == userId){
+        inventoryList.push({
+          name: doc.id,
+          ...doc.data(),
+        })
+      }
     })
     setInventory(inventoryList)
   }
@@ -45,7 +47,7 @@ export default function Home() {
 
     if(docSnap.exists()){
         const {quantity} = docSnap.data()
-        await setDoc(docRef, {quantity: quantity + 1})
+        await setDoc(docRef, {quantity: quantity + 1, uid: userId})
       } else {
         await setDoc(docRef, {quantity: 1, uid: userId})
       }
