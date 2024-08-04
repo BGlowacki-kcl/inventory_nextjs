@@ -26,9 +26,9 @@ export default function Home() {
       });
   }, [])
 
-  const updateInventory = async () => {
-    if(!userId) return;
-    const userQuery = query(collection(firestore, 'inventory'), where("uid", "==", userId))
+  const updateInventory = async (uid) => {
+    if(!uid) return;
+    const userQuery = query(collection(firestore, 'inventory'), where("uid", "==", uid))
     const docs = await getDocs(userQuery)
     const inventoryList = []
     docs.forEach((doc)=>{
