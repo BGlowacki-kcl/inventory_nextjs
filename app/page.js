@@ -72,6 +72,16 @@ export default function Home() {
     await updateInventory(userId)
   }
 
+  const removeAll = async (item) =>{
+    const docRef = doc(collection(firestore, 'inventory'), item)
+    const docSnap = await getDoc(docRef)
+
+    if(docSnap.exists()){
+      await deleteDoc(docRef)
+    }
+    await updateInventory(userId)
+  }
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -178,7 +188,7 @@ export default function Home() {
                   addItem(name)
                 }}
               >
-                Add
+                +
               </Button>
               <Button 
                 variant="contained" 
@@ -186,9 +196,18 @@ export default function Home() {
                   removeItem(name)
                 }}
               >
-                Remove
+                -
               </Button>
             </Stack>
+
+            <Button 
+                variant="contained" 
+                onClick={()=>{
+                  removeAll(name)
+                }}
+              >
+                Bin
+              </Button>
           </Box>
       ))}
       </Stack>
