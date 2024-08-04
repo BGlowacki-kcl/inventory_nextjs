@@ -32,8 +32,9 @@ export default function Home() {
     const docs = await getDocs(userQuery)
     const inventoryList = []
     docs.forEach((doc)=>{
+      const data = doc.data();
       inventoryList.push({
-        name: doc.id,
+        name: doc.id.replace(`${uid}_`, ''),
         ...doc.data(),
       })
     })
