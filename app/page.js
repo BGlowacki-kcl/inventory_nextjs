@@ -19,7 +19,7 @@ export default function Home() {
         const uid = userCredential.user.uid;
         setUserId(uid);
         console.log('Signed in anonymously with UID:', uid);
-        updateInventory();
+        updateInventory(uid);
       })
       .catch((error) => {
         console.error('Error signing in anonymously:', error.code, error.message);
@@ -27,16 +27,15 @@ export default function Home() {
   }, [])
 
   const updateInventory = async () => {
-    const snapshot = query(collection(firestore, 'inventory'))
-    const docs = await getDocs(snapshot)
+    if(!userId) return;
+    const userQuery = query(collection(firestore, 'inventory'), where("uid", "==", userId))
+    const docs = await getDocs(userQuery)
     const inventoryList = []
     docs.forEach((doc)=>{
-      if(doc.uid == userId){
-        inventoryList.push({
-          name: doc.id,
-          ...doc.data(),
-        })
-      }
+      inventoryList.push({
+        name: doc.id,
+        ...doc.data(),
+      })
     })
     setInventory(inventoryList)
   }
