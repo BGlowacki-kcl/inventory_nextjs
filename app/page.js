@@ -41,20 +41,21 @@ export default function Home() {
   }
 
   const addItem = async (item) =>{
-    const docRef = doc(collection(firestore, 'inventory'), item)
+    if(!userId) return;
+    const docRef = doc(collection(firestore, 'inventory'), `${userId}_${item}`)
     const docSnap = await getDoc(docRef)
 
     if(docSnap.exists()){
         const {quantity} = docSnap.data()
-        await setDoc(docRef, {quantity: quantity + 1, uid: userId})
+        await setDoc(docRef, {quantity: quantity + 1}, {merge: true})
       } else {
         await setDoc(docRef, {quantity: 1, uid: userId})
       }
-    await updateInventory()
+    await updateInventory(userId)
   }
 
   const removeItem = async (item) =>{
-    const docRef = doc(collection(firestore, 'inventory'), item)
+    const docRef = doc(collection(firestore, 'inventory'), `${userId}_${item}`)
     const docSnap = await getDoc(docRef)
 
     if(docSnap.exists()){
@@ -62,10 +63,10 @@ export default function Home() {
       if(quantity==1){
         await deleteDoc(docRef)
       } else {
-        await setDoc(docRef, {quantity: quantity - 1})
+        await setDoc(docRef, {quantity: quantity - 1}, {merge: true})
       }
     }
-    await updateInventory()
+    await updateInventory(userId)
   }
 
   const handleOpen = () => setOpen(true)
