@@ -28,11 +28,13 @@ export default function Home() {
 
   const updateInventory = async (uid) => {
     if(!uid) return;
+    console.log('Fetching inventory for UID:', uid);
     const userQuery = query(collection(firestore, 'inventory'), where("uid", "==", uid))
     const docs = await getDocs(userQuery)
     const inventoryList = []
     docs.forEach((doc)=>{
       const data = doc.data();
+      console.log('Fetched item:', data);
       inventoryList.push({
         name: doc.id,
         ...doc.data(),
