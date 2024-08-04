@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { firestore, auth } from "@/firebase";
 import { Box, Modal, Typography, Stack, TextField, Button } from "@mui/material";
-import { query, collection, getDocs, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { query, collection, getDocs, deleteDoc, doc, getDoc, setDoc, where } from "firebase/firestore";
 import { signInAnonymously } from "firebase/auth";
 
 export default function Home() {
