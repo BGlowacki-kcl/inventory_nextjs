@@ -34,7 +34,7 @@ export default function Home() {
     docs.forEach((doc)=>{
       const data = doc.data();
       inventoryList.push({
-        name: doc.id.replace(`${uid}_`, ''),
+        name: doc.id,
         ...doc.data(),
       })
     })
@@ -43,7 +43,7 @@ export default function Home() {
 
   const addItem = async (item) =>{
     if(!userId) return;
-    const docRef = doc(collection(firestore, 'inventory'), `${userId}_${item}`)
+    const docRef = doc(collection(firestore, 'inventory'), item)
     const docSnap = await getDoc(docRef)
 
     if(docSnap.exists()){
@@ -56,7 +56,7 @@ export default function Home() {
   }
 
   const removeItem = async (item) =>{
-    const docRef = doc(collection(firestore, 'inventory'), `${userId}_${item}`)
+    const docRef = doc(collection(firestore, 'inventory'), item)
     const docSnap = await getDoc(docRef)
 
     if(docSnap.exists()){
