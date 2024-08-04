@@ -1,14 +1,30 @@
 'use client'
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { firestore } from "@/firebase";
+import { firestore, auth } from "@/firebase";
 import { Box, Modal, Typography, Stack, TextField, Button } from "@mui/material";
 import { query, collection, getDocs, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { signInAnonymously } from "firebase/auth";
 
 export default function Home() {
+
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    signInAnonymously(auth)
+      .then((userCredential) => {
+        const uid = userCredential.user.uid;
+        setUserId(uid);
+        console.log('Signed in anonymously with UID:', uid);
+        updateInventory();
+      })
+      .catch((error) => {
+        console.error('Error signing in anonymously:', error.code, error.message);
+      });
+  }, [])
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
@@ -31,7 +47,7 @@ export default function Home() {
         const {quantity} = docSnap.data()
         await setDoc(docRef, {quantity: quantity + 1})
       } else {
-        await setDoc(docRef, {quantity: 1})
+        await setDoc(docRef, {quantity: 1, uid: userId})
       }
     await updateInventory()
   }
@@ -50,10 +66,6 @@ export default function Home() {
     }
     await updateInventory()
   }
-
-  useEffect(() => {
-    updateInventory()
-  }, [])
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -169,7 +181,7 @@ export default function Home() {
                   removeItem(name)
                 }}
               >
-                Remove!
+                Remove
               </Button>
             </Stack>
           </Box>
