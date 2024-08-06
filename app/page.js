@@ -17,6 +17,8 @@ export default function Home() {
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
   const [userId, setUserId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredInventory, setFilteredInventory] = useState([]);
 
   useEffect(() => {
     signInAnonymously(auth)
@@ -30,6 +32,23 @@ export default function Home() {
         console.error('Error signing in anonymously:', error.code, error.message);
       });
   }, [])
+
+  useEffect(() => {
+    setFilteredInventory(inventory);
+  }, [inventory]);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filteredItems = inventory.filter(item =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredInventory(filteredItems);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setFilteredInventory(inventory);
+  };
 
   const updateInventory = async (uid) => {
     if(!uid) return;
@@ -154,15 +173,33 @@ export default function Home() {
             </Stack>
           </Box>
         </Modal>
-        <Button variant="contained" onClick={handleOpen} className="animate-bounce">
-          Add new Item
-        </Button>
+          <Stack
+            display="flex"
+            flexDirection="row"
+            width="100%"
+            direction="row"
+            spacing={1}
+          >
+            <TextField
+              variant="outlined"
+              label="Search Items"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              fullWidth
+            />
+            <Button variant="outlined" onClick={clearSearch}>
+              Clear Search
+            </Button>
+            <Button variant="contained" onClick={handleOpen} className="animate-bounce">
+              Add new Item
+            </Button>
+          </Stack>
         <Box width="100%" p={2} bgcolor="background.paper" boxShadow={1}>
           <Typography variant="h2" gutterBottom>
             Inventory Items
           </Typography>
           <Stack spacing={2} maxHeight="35vh" overflow="auto">
-            {inventory.map(({ name, quantity }) => (
+            {filteredInventory.map(({ name, quantity }) => (
               <Box
                 key={name}
                 p={2}
