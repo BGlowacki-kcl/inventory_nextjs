@@ -1,3 +1,10 @@
+## Deployed version
+Checkout and play around with the deployed version of this app: https://inventory-nextjs.vercel.app/
+
+## Find me online
+LinkedIn: https://www.linkedin.com/in/bartosz-glowacki-kcl/
+Portfolio: https://www.bartoszglowacki.site/
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
